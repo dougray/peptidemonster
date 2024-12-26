@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from routers import peptide_prices
+from .routers import peptide_prices
 
 app = FastAPI()
 
