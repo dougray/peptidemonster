@@ -1,3 +1,4 @@
+import html as html_lib
 import requests
 from bs4 import BeautifulSoup
 import os
@@ -14,7 +15,7 @@ def fetch_peptide_prices(url, selectors):
     Returns:
         list of dict: A list of dictionaries containing product names and prices.
     """
-    response = requests.get(url)
+    response = requests.get(url, timeout=30)
     soup = BeautifulSoup(response.content, 'html.parser')
     
     products = soup.select(selectors['product'])
@@ -69,7 +70,9 @@ def generate_html(data):
         </tr>
 """
     for row in data:
-        html += f"<tr><td>{row['Product']}</td><td>{row['Price']}</td></tr>"
+        # Scraped text is someone else's: escape it, or a vendor page could put
+        # <script> on the published site.
+        html += f"<tr><td>{html_lib.escape(str(row['Product']))}</td><td>{html_lib.escape(str(row['Price']))}</td></tr>"
     html += """
     </table>
 </body>
